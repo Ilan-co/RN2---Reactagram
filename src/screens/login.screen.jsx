@@ -1,29 +1,15 @@
 import React, { useState } from 'react';
-import {
-  StyleSheet, TextInput, Button, View,
-} from 'react-native';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#008080',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inpForm: {
-    backgroundColor: '#ffffff',
-    width: 200,
-    padding: 10,
-    marginBottom: 10,
-  },
-  btnSubmit: {
-    width: 150,
-  },
-});
+import PropTypes from 'prop-types';
+import { TextInput, Button, View } from 'react-native';
+import styles from '../style';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  function login() {
+    navigation.navigate('Feed');
+  }
 
   return (
     <View style={styles.container}>
@@ -45,11 +31,23 @@ const LoginScreen = ({ navigation }) => {
         <Button
           color="#006767"
           title="Connexion"
+          onPress={() => login()}
+        />
+        <View style={{ height: 10 }} />
+        <Button
+          color="#006767"
+          title="Créer un compte"
           onPress={() => navigation.navigate('Register')}
         />
       </View>
     </View>
   );
+};
+
+LoginScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default LoginScreen;

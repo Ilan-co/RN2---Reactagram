@@ -1,43 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import {
-  Image, StyleSheet, Text, TextInput, Button, View, TouchableOpacity,
+  Image, Text, TextInput, Button, View, TouchableOpacity,
 } from 'react-native';
 import * as ExpoImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#008080',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inpForm: {
-    backgroundColor: '#ffffff',
-    width: 200,
-    padding: 10,
-    marginBottom: 10,
-  },
-  btnPick: {
-    flexDirection: 'row',
-    padding: 20,
-  },
-  singleBtn: {
-    backgroundColor: '#0067',
-    color: '#ffffff',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    marginHorizontal: 10,
-  },
-  btnSubmit: {
-    width: 150,
-  },
-  img: {
-    backgroundColor: '#000000',
-    width: 150,
-    height: 150,
-  },
-});
+import styles from '../style';
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -57,17 +25,22 @@ const RegisterScreen = ({ navigation }) => {
         latitude: coordinates.coords.latitude,
         longitude: coordinates.coords.longitude,
       };
-      const location = await Location.reverseGeocodeAsync(objCoord);
-      setLocation(`${location[0].street} - ${location[0].city}`);
+      const data = await Location.reverseGeocodeAsync(objCoord);
+      setLocation(`${data[0].street} - ${data[0].city}`);
     })();
   }, []);
+
+  function register() {
+    console.log(email, password, location, profilPicture);
+    navigation.navigate('Login');
+  }
 
   return (
     <View style={styles.container}>
       <Image
         style={styles.img}
         source={{
-          uri: profilPicture,
+          uri: profilPicture !== '' ? profilPicture : null,
         }}
       />
       <View style={styles.btnPick}>
@@ -106,11 +79,17 @@ const RegisterScreen = ({ navigation }) => {
         <Button
           color="#006767"
           title="Inscription"
-          onPress={() => navigation.navigate('Login')}
+          onPress={() => register()}
         />
       </View>
     </View>
   );
+};
+
+RegisterScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default RegisterScreen;
