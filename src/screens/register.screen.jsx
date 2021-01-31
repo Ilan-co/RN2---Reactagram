@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Image, Text, TextInput, Button, View, TouchableOpacity,
+  Image, Text, TextInput, Button, View, TouchableOpacity, Alert,
 } from 'react-native';
 import * as ExpoImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import styles from '../style';
+import { register } from '../services/user.service';
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -17,7 +18,7 @@ const RegisterScreen = ({ navigation }) => {
     (async () => {
       const { status } = await Location.requestPermissionsAsync();
       if (status !== 'granted') {
-        console.log('Pas les permissions');
+        Alert.alert('', 'Vous n\'avez pas les permissions');
         return;
       }
       const coordinates = await Location.getCurrentPositionAsync({});
@@ -30,9 +31,16 @@ const RegisterScreen = ({ navigation }) => {
     })();
   }, []);
 
-  function register() {
-    console.log(email, password, location, profilPicture);
-    navigation.navigate('Login');
+  function handleSubmit() {
+    register(email, password, profilPicture, location).then((user) => {
+      if (user) {
+        navigation.navigate('Login');
+        setEmail('');
+        setPassword('');
+        setLocation('');
+        setProfilPicture('');
+      }
+    });
   }
 
   return (
@@ -79,7 +87,13 @@ const RegisterScreen = ({ navigation }) => {
         <Button
           color="#006767"
           title="Inscription"
-          onPress={() => register()}
+          onPress={() => handleSubmit()}
+        />
+        <View style={{ height: 10 }} />
+        <Button
+          color="#006767"
+          title="J'ai déjà un compte"
+          onPress={() => navigation.navigate('Login')}
         />
       </View>
     </View>

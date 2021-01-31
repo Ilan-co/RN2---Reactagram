@@ -4,29 +4,7 @@ import {
   View, Image, Text, FlatList,
 } from 'react-native';
 import styles from '../style';
-
-const DATA = [
-  {
-    img: 'https://reactjs.org/logo-og.png',
-    email: 'eric.chheu@epitech.eu',
-    location: 'a',
-  },
-  {
-    img: 'https://reactjs.org/logo-og.png',
-    email: 'chheu@hotmail.fr',
-    location: 'a',
-  },
-  {
-    img: 'https://reactjs.org/logo-og.png',
-    email: 'akinoshi23195@gmail.com',
-    location: 'a',
-  },
-  {
-    img: 'https://reactjs.org/logo-og.png',
-    email: 'akinoshi@gmail.com',
-    location: 'a',
-  },
-];
+import { getUsers } from '../services/user.service';
 
 const Item = ({ image, email, location }) => (
   <View style={styles.itemUser}>
@@ -45,14 +23,15 @@ const UsersScreen = () => {
   const [users, setUsers] = useState();
 
   useEffect(() => {
-    // set Feed here
-    setUsers(DATA);
+    (async () => {
+      setUsers(await getUsers());
+    })();
   }, []);
 
   const renderItem = ({ item }) => (
     <Item
-      image={item.img}
-      email={item.email}
+      image={item.picture}
+      email={item.name}
       location={item.location}
     />
   );

@@ -2,13 +2,20 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { TextInput, Button, View } from 'react-native';
 import styles from '../style';
+import { login } from '../services/user.service';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  function login() {
-    navigation.navigate('Feed');
+  function handleSubmit() {
+    login(email, password).then((user) => {
+      if (user) {
+        navigation.navigate('Feed');
+        setEmail('');
+        setPassword('');
+      }
+    });
   }
 
   return (
@@ -31,7 +38,7 @@ const LoginScreen = ({ navigation }) => {
         <Button
           color="#006767"
           title="Connexion"
-          onPress={() => login()}
+          onPress={() => handleSubmit()}
         />
         <View style={{ height: 10 }} />
         <Button

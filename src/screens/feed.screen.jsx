@@ -4,25 +4,7 @@ import {
   View, Image, Text, FlatList,
 } from 'react-native';
 import styles from '../style';
-
-const DATA = [
-  {
-    img: 'https://reactjs.org/logo-og.png',
-    location: 'a',
-  },
-  {
-    img: 'https://reactjs.org/logo-og.png',
-    location: 'b',
-  },
-  {
-    img: 'https://reactjs.org/logo-og.png',
-    location: 'c',
-  },
-  {
-    img: 'https://reactjs.org/logo-og.png',
-    location: 'd',
-  },
-];
+import { getFeed } from '../services/user.service';
 
 const Item = ({ image, location }) => (
   <View style={styles.itemFeed}>
@@ -36,15 +18,26 @@ const Item = ({ image, location }) => (
 
 const FeedScreen = () => {
   const [feed, setFeed] = useState();
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function getData() {
+    setFeed(await getFeed());
+  }
+
+  async function handleRefresh() {
+    setRefreshing(true);
+    await getData();
+  }
 
   useEffect(() => {
-    // set Feed here
-    setFeed(DATA);
+    (async () => {
+      await getData();
+    })();
   }, []);
 
   const renderItem = ({ item }) => (
     <Item
-      image={item.img}
+      image={item.image}
       location={item.location}
     />
   );
@@ -52,6 +45,8 @@ const FeedScreen = () => {
   return (
     <View style={styles.containerList}>
       <FlatList
+        refreshing={refreshing}
+        onRefresh={() => handleRefresh()}
         data={feed}
         renderItem={renderItem}
         keyExtractor={(_, index) => `feed-item-${index}`}

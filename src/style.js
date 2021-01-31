@@ -62,6 +62,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
   },
+  profilTxt: {
+    color: '#ffffff',
+    fontSize: 16,
+  },
 });
 
 export default styles;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image } from 'react-native';
 import styles from '../style';
+import { getProfil } from '../services/user.service';
 
 const ProfilScreen = () => {
   const [email, setEmail] = useState();
@@ -8,10 +9,12 @@ const ProfilScreen = () => {
   const [profilPicture, setProfilPicture] = useState();
 
   useEffect(() => {
-    // get profil and set data here
-    setEmail('hihi@epijsdqd.dijsq');
-    setLocation('France');
-    setProfilPicture('https://reactjs.org/logo-og.png');
+    (async () => {
+      const user = await getProfil();
+      setEmail(user.data().name);
+      setLocation(user.data().location);
+      setProfilPicture(user.data().picture);
+    })();
   }, []);
 
   return (
@@ -20,8 +23,8 @@ const ProfilScreen = () => {
         style={styles.img}
         source={{ uri: profilPicture }}
       />
-      <Text>{email}</Text>
-      <Text>{location}</Text>
+      <Text style={styles.profilTxt}>{email}</Text>
+      <Text style={styles.profilTxt}>{location}</Text>
     </View>
   );
 };
