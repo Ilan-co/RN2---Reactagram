@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image } from 'react-native';
+import PropTypes from 'prop-types';
+import {
+  Button, View, Text, Image,
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../style';
 import { getProfil } from '../services/user.service';
 
-const ProfilScreen = () => {
+const ProfilScreen = ({ navigation }) => {
   const [email, setEmail] = useState();
   const [location, setLocation] = useState();
   const [profilPicture, setProfilPicture] = useState();
@@ -17,6 +21,10 @@ const ProfilScreen = () => {
     })();
   }, []);
 
+  function handleSubmit() {
+    AsyncStorage.removeItem('UID');
+    navigation.navigate('Register');
+  }
   return (
     <View style={styles.container}>
       <Image
@@ -25,8 +33,19 @@ const ProfilScreen = () => {
       />
       <Text style={styles.profilTxt}>{email}</Text>
       <Text style={styles.profilTxt}>{location}</Text>
+      <Button
+        color="black"
+        title="Deconnexion"
+        onPress={() => handleSubmit()}
+      />
     </View>
   );
+};
+
+ProfilScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default ProfilScreen;
