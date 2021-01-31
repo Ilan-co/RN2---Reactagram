@@ -21,10 +21,22 @@ const Item = ({ image, email, location }) => (
 
 const UsersScreen = () => {
   const [users, setUsers] = useState();
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function getData() {
+    setUsers(await getUsers());
+  }
+
+  async function handleRefresh() {
+    setRefreshing(true);
+    await getData().then(() => {
+      setRefreshing(false);
+    });
+  }
 
   useEffect(() => {
     (async () => {
-      setUsers(await getUsers());
+      await getData();
     })();
   }, []);
 
@@ -39,6 +51,8 @@ const UsersScreen = () => {
   return (
     <View style={styles.containerList}>
       <FlatList
+        refreshing={refreshing}
+        onRefresh={() => handleRefresh()}
         data={users}
         renderItem={renderItem}
         keyExtractor={(_, index) => `user-${index}`}

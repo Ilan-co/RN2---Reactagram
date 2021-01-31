@@ -26,7 +26,9 @@ const FeedScreen = () => {
 
   async function handleRefresh() {
     setRefreshing(true);
-    await getData();
+    await getData().then(() => {
+      setRefreshing(false);
+    });
   }
 
   useEffect(() => {
