@@ -33,11 +33,13 @@ const ProfilScreen = ({ navigation }) => {
       />
       <Text style={styles.profilTxt}>{email}</Text>
       <Text style={styles.profilTxt}>{location}</Text>
-      <Button
-        color="black"
-        title="Deconnexion"
-        onPress={() => handleSubmit()}
-      />
+      <View style={styles.btnSubmit}>
+        <Button
+          color="black"
+          title="Deconnexion"
+          onPress={() => handleSubmit()}
+        />
+      </View>
     </View>
   );
 };
