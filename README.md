@@ -1,6 +1,6 @@
 # Reactagram
 
-Projet React Native du groupe FL1-Wow.
+Projet React Native du groupe RN2-Reactagram
 
 ## Version du projet
 
