@@ -1,33 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   Image, Text, TextInput, Button, View, TouchableOpacity, Alert,
 } from 'react-native';
 import * as ExpoImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../style';
 import { register } from '../services/user.service';
+import { AuthContext } from '../helpers/AuthProvider';
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [profilPicture, setProfilPicture] = useState('');
   const [location, setLocation] = useState('');
+  const { userLogged, setUserLogged } = useContext(AuthContext);
 
   useEffect(() => {
     (async () => {
-      const { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('', 'Vous n\'avez pas les permissions');
-        return;
+      if (await AsyncStorage.getItem('UID')) {
+        setUserLogged(true);
+        if (userLogged) {
+          navigation.navigate('Feed');
+        }
+      } else {
+        const { status } = await Location.requestPermissionsAsync();
+        if (status !== 'granted') {
+          Alert.alert('', 'Vous n\'avez pas les permissions');
+          return;
+        }
+        const coordinates = await Location.getCurrentPositionAsync({});
+        const objCoord = {
+          latitude: coordinates.coords.latitude,
+          longitude: coordinates.coords.longitude,
+        };
+        const data = await Location.reverseGeocodeAsync(objCoord);
+        setLocation(`${data[0].street} - ${data[0].city}`);
       }
-      const coordinates = await Location.getCurrentPositionAsync({});
-      const objCoord = {
-        latitude: coordinates.coords.latitude,
-        longitude: coordinates.coords.longitude,
-      };
-      const data = await Location.reverseGeocodeAsync(objCoord);
-      setLocation(`${data[0].street} - ${data[0].city}`);
     })();
   }, []);
 
