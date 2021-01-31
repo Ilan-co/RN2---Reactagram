@@ -32,6 +32,7 @@ const LoginScreen = ({ navigation }) => {
         value={password}
         placeholder="Mot de passe"
         textContentType="password"
+        secureTextEntry
         style={styles.inpForm}
       />
       <View style={styles.btnSubmit}>
