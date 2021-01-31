@@ -13,3 +13,7 @@ expo ~40.0
   2. Ouvrir le projet ou lancer un terminal sur le dossier récupéré
   3. Lancer "npm start"
   4. Scanner le code QR depuis l'application Expo sur Android ou depuis l'application Camera sur iOS
+
+## Lien
+
+https://expo.io/@eric.chheu/projects/RN2-Reactagram
